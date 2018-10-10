@@ -103,13 +103,15 @@ function getRepoBaseUrl (packageJson) {
  * Parse the project using the Solidity compiler.
  */
 function parseProject (solidityCompilerPath, solidityCompilerExtraArgs, contractsPath) {
+  let solfiles = shell.exec.find(contractsPath).filter(file => file.match(/\.sol$/); });
+  solfiles = solfiles.join(' ');
   const commandOutput = shell.exec([
     `${solidityCompilerPath}`,
     `  --pretty-json`,
     `  --allow-paths ${contractsPath}`,
     `  --combined-json ${COMBINED_JSON_OPTIONS.join(',')}`,
     `  ${solidityCompilerExtraArgs}`,
-    `  $(find ${contractsPath} -type f -name "*.sol")`
+    `  ${solfiles} ")`
   ].join(' '), { silent: true })
   handleErrorCode(commandOutput)
   return JSON.parse(commandOutput.stdout)
